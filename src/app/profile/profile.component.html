@@ -1,0 +1,20 @@
+<div class="profile-container">
+    <h2>Edit Profile</h2>
+    <form (ngSubmit)="onSave()">
+      <div>
+        <label for="username">Username:</label>
+        <input id="username" [(ngModel)]="userDetails.username" name="username" disabled />
+      </div>
+      <div>
+        <label for="DOB">Date of Birth:</label>
+        <input id="DOB" [(ngModel)]="userDetails.DOB" name="DOB" />
+      </div>
+      <div>
+        <label for="age">Age:</label>
+        <input id="age" [(ngModel)]="userDetails.age" name="age" type="number" />
+      </div>
+      <button type="submit">Save</button>
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+    </form>
+  </div>
+  

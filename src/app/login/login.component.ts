@@ -2,13 +2,17 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+
+const backendURL = "http://localhost:3000"
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterModule, CommonModule],
+  imports: [FormsModule, RouterModule, CommonModule, HttpClientModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 
 
@@ -19,36 +23,33 @@ export class LoginComponent {
   password = ""
   errorMessage = ""
 
-  // list of hard coded users
-  users=[
-    {UserName: "marty", Password:"test"},
-    {UserName: "test", Password:"test"},
-    {UserName: "user", Password: "password"}
-  ]
-
-  constructor(private router:Router) {}
-
+  constructor(private router:Router, private http: HttpClient) {}
 
   //login function for when user hits login button
   login(){
-    // initialises  the user as not valid
-    let validUser = false
+    // preps login data
+    const loginData = {
+      email: this.userName,
+      password: this.password
+    }
 
+    //send the login data to the server
+    this.http.post(backendURL+'/api/auth', loginData).subscribe(
+      (response: any) => {
+        if (response.valid) {
+          // Store user details in session storage
+          sessionStorage.setItem('user', JSON.stringify(response));
 
-    // for loop checks if user entered information is valid with hard coded users info
-    for (let i = 0; i < this.users.length; i++){
-      if(this.users[i].UserName === this.userName && this.users[i].Password === this.password){
-        validUser = true
-        break
+          // Navigate to the account page
+          this.router.navigate(['/profile']);
+          this.errorMessage = "";
+        } else {
+          this.errorMessage = "Invalid Username or Password, Try again";
+        }
+      },
+      (error) => {
+        this.errorMessage = "Error connecting to the server. Please try again later.";
       }
-    }
-
-    // if user info is valid page navigates to account page if not error message is presented
-    if(validUser){
-      this.router.navigate(['/account'])
-      this.errorMessage = ""
-    } else {
-      this.errorMessage = "invalid Username or Password, Try again"
-    }
+    );
   }
 }

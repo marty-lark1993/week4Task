@@ -2,3 +2,10 @@
     <h1>Account Page</h1>
     <img id="catpic" src="../../assets/cat.jpg" alt="its a cat" srcset="../../assets/cat.jpg">
 </div>
+<div class="account-container">
+    <h2>Account Details</h2>
+    <p><strong>Username:</strong> {{ userDetails.username }}</p>
+    <p><strong>Date of Birth:</strong> {{ userDetails.DOB }}</p>
+    <p><strong>Age:</strong> {{ userDetails.age }}</p>
+    <a (click)="editUser()">Edit Profile</a>
+  </div>
